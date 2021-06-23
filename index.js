@@ -23,11 +23,20 @@ const askQuestions = () => {
 
 const searchProfessor = async (name) => {
   try {
-    const {data: html} = await axios.get(`https://www.ratemyprofessors.com/search/teachers?query=${name}`);
+    const { data: html } = await axios.get(`https://www.ratemyprofessors.com/search/teachers?query=${name}`);
     const $ = cheerio.load(html);
-    const results = $('.SearchResultsPage__SearchResultsWrapper-sc-1srop1v-1 div:nth-child(2)');
-    console.log(results)
+    const resultsDiv = $('div .SearchResultsPage__SearchResultsWrapper-sc-1srop1v-1 div:nth-child(2)');
     const professors = [];
+    // ================= RATING QUERY ============== //
+    let rating = resultsDiv.find('div[class^="CardNumRating__CardNumRatingNumber"]').text();
+    let ratingCount = resultsDiv.find('div[class^="CardNumRating__CardNumRatingCount"]').text();
+    console.log(rating, ratingCount);
+    // ================= TEACHER INFO QUERY ============== //
+    let teacherName = resultsDiv.find('div[class^="CardName__StyledCardName"]').text();
+    let department = resultsDiv.find('div[class^="CardSchool__Department"]').text();
+    let school = resultsDiv.find('div[class^="CardSchool__School"]').text();
+
+    console.log(teacherName, school, department);
     // results = div with a list of <a> tags
     // on each <a> find the teacher card info rating wrapper
     // find the teacher number rating wrapper and extract the rating and number of ratings
